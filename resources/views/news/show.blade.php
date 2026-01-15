@@ -8,7 +8,14 @@
     <br>
     @if(auth()->id() == $news->user_id)
         <a href="{{ route('news.edit',$news->id) }}" class="btn btn-warning">edit</a>
-        <a href="{{ route('news.destroy',$news->id) }}" class="btn btn-danger">delete</a>
+        <form action="{{ route('news.destroy', $news) }}" method="POST" class="d-inline">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger"
+                    onclick="return confirm('Удалить эту новость?')">
+                Удалить новость
+            </button>
+        </form>
     @endif
     <br>
     <h2>Комментарии</h2>
