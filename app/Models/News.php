@@ -3,8 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class News extends Model
 {
-    //
+    use HasFactory;
+
+    protected $fillable = ['title', 'content', 'user_id'];
+
+    // Новость принадлежит одному пользователю (автору)
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // Новость имеет много комментариев
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }
