@@ -16,10 +16,12 @@
     <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
         <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{{route('news.index')}}">Новости на сайте</a>
         @auth
-            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="#">Мои статьи</a>
+            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{{route('profile',auth()->id())}}">Мои статьи</a>
             <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{{route('news.create')}}">Добавить статью</a>
+            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{{route('logout')}}">Выйти</a>
+        @else
+            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{{ route('login') }}">Войти</a>
         @endauth
-        <a class="py-2 link-body-emphasis text-decoration-none" href="{{ route('login') }}">Войти</a></nav>
 </div>
 <div class="container mt-4">
     @yield('content')
