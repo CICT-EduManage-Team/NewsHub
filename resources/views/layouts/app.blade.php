@@ -6,26 +6,46 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title')</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    @vite(['resources/css/app.css'])
     @yield('styles')
+    @vite('resources/css/app.css' )
+    @vite('resources/js/app.js')
 </head>
 <body>
-<div class="container d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
-    <a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none">
-        <span class="fs-4">NewsHub</span> </a>
-    <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
-        <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{{route('news.index')}}">Новости на сайте</a>
-        @auth
-            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{{route('profile',auth()->id())}}">Мои статьи</a>
-            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{{route('news.create')}}">Добавить статью</a>
-            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{{route('logout')}}">Выйти</a>
-        @else
-            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{{ route('login') }}">Войти</a>
-        @endauth
-</div>
+<header class="main-navbar">
+    <div class="container navbar-container">
+        <div class="navbar-left-side">
+            <a href="/" class="navbar-logo"><span class="logo-accent">News</span>Hub</a>
+            <nav class="navbar-menu">
+                <a class="nav-item-link" href="{{route('news.index')}}">Новости</a>
+                @auth
+                    <a class="nav-item-link" href="{{route('profile', auth()->id())}}">Мои статьи</a>
+                    <a class="nav-item-link" href="{{route('news.create')}}">Добавить статью</a>
+                @endauth
+            </nav>
+        </div>
+
+        <div class="navbar-right-side">
+            @auth
+                <span class="user-greeting">Привет, <b>{{ auth()->user()->name }}</b></span>
+                <a class="btn-logout-custom" href="{{route('logout')}}">Выйти</a>
+            @else
+                @if(!Route::is('login'))
+                    <a class="btn-login-text" href="{{ route('login') }}">Войти</a>
+                @endif
+
+                @if(!Route::is('register'))
+                    <a class="btn-register-solid" href="{{ route('register') }}">Регистрация</a>
+                @endif
+            @endauth
+        </div>
+    </div>
+</header>
 <div class="container mt-4">
     @yield('content')
 </div>
 @yield('scripts')
+
+
 </body>
 </html>

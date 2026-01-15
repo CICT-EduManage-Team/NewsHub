@@ -3,27 +3,46 @@
 @section('title', 'Новости сайта')
 
 @section('content')
-    <h1>Новости сайта</h1>
-
-    @forelse($news as $newsItem)
-        <div class="news-item">
-            <h2>{{ $newsItem->title }}</h2>
-            <small>Опубликовано: {{ $newsItem->created_at->format('d.m.Y H:i') }}</small>
-            <a href="{{route('news.show',$newsItem->id)}}" class="btn btn-info">подробнее</a>
+    <div class="news-feed-container">
+        <div class="feed-header">
+            <h1 class="feed-title">Актуальные новости</h1>
+            <div class="feed-line"></div>
         </div>
-    @empty
-        <p>Новостей нет</p>
-    @endforelse
 
-@endsection
+        <div class="news-grid">
+            @forelse($news as $newsItem)
+                <article class="news-card">
+                    <div class="news-card-content">
+                        <div class="news-meta">
+                        <span class="news-date">
+                            <i class="bi bi-calendar3"></i> {{ $newsItem->created_at->format('d M Y') }}
+                        </span>
+                            <span class="news-author">
+                            <i class="bi bi-person"></i> {{ $newsItem->user->name ?? 'Редакция' }}
+                        </span>
+                        </div>
 
-@section('styles')
-    <style>
-        .news-item {
-            margin-bottom: 20px;
-            border: #4a5568 1px solid;
-            padding: 10px;
-            border-radius: 5px;
-        }
-    </style>
+                        <h2 class="news-title">
+                            <a href="{{ route('news.show', $newsItem->id) }}">{{ $newsItem->title }}</a>
+                        </h2>
+
+                        <div class="news-excerpt">
+                            {!! Str::limit(strip_tags($newsItem->content), 150) !!}
+                        </div>
+
+                        <div class="news-footer">
+                            <a href="{{ route('news.show', $newsItem->id) }}" class="btn-read-more">
+                                Подробнее <span class="arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            @empty
+                <div class="empty-news">
+                    <div class="empty-icon">📰</div>
+                    <p>На данный момент свежих новостей нет. Загляните позже!</p>
+                </div>
+            @endforelse
+        </div>
+    </div>
 @endsection

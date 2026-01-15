@@ -1,4 +1,7 @@
 import './bootstrap';
+import { initTinyMCE } from './editor';
+window.initTinyMCE = initTinyMCE; // Делаем функцию доступной везде
+
 document.addEventListener('DOMContentLoaded', function() {
     // Mobile Menu Toggle
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');

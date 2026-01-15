@@ -7,87 +7,58 @@
 @endsection
 
 @section('content')
-    <h1 class="mb-4">
-        <i class="bi bi-plus-circle"></i> Create New News
-    </h1>
+    <div class="editor-page-container">
+        <div class="editor-header">
+            <h1 class="editor-title">
+                <span class="icon-accent">✎</span> Создание новой статьи
+            </h1>
+            <p class="editor-subtitle">Поделитесь важными событиями с сообществом NewsHub</p>
+        </div>
 
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-body">
-                    <form action="{{ route('news.store') }}" method="POST">
-    @csrf
-                        <div class="mb-3">
-                            <label for="title" class="form-label">Title</label>
-                            <input type="text" class="form-control" id="title" name="title" required value="{{ old('title') }}">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="editor-card">
+                    <form action="{{ route('news.store') }}" method="POST" id="newsForm">
+                        @csrf
+
+                        <div class="mb-4">
+                            <label for="title" class="form-label-google">Заголовок статьи</label>
+                            <input type="text" class="form-control google-input-large @error('title') is-invalid @enderror"
+                                   id="title" name="title" required value="{{ old('title') }}"
+                                   placeholder="Введите броский заголовок...">
+                            @error('title') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
-                        <div class="mb-3">
-                            <label for="content" class="form-label">Content</label>
-                            <textarea class="form-control" id="content" name="content" rows="5">{{ old('content') }}</textarea>
+
+                        <div class="mb-4">
+                            <label for="content" class="form-label-google">Текст публикации</label>
+                            <div class="tinymce-wrapper">
+                                <textarea id="content" name="content">{{ old('content') }}</textarea>
+                            </div>
+                            @error('content') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
-                        <button type="submit" class="btn btn-primary">Create News</button>
+
+                        <div class="editor-actions">
+                            <a href="{{ route('news.index') }}" class="btn-google-secondary">Отмена</a>
+                            <button type="submit" class="btn-google-blue-large">
+                                Опубликовать статью
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 @endsection
-
-
 @section('scripts')
     <script>
-        tinymce.init({
-            selector: '#content',
-            plugins: 'advlist autolink lists link image charmap preview anchor',
-            toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
-            height: 400,
-            language: 'ru',
-
-            images_upload_url: "{{ route('tinymce.upload') }}",
-            images_upload_credentials: true, // 🔥 обязательно
-
-            paste_data_images: false,
-
-            images_upload_handler: function (blobInfo, progress) {
-                return new Promise(function (resolve, reject) {
-                    let xhr = new XMLHttpRequest();
-                    xhr.open('POST', "{{ route('tinymce.upload') }}");
-
-                    xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
-
-                    xhr.upload.onprogress = function (e) {
-                        progress(e.loaded / e.total * 100);
-                    };
-
-                    xhr.onload = function () {
-                        if (xhr.status < 200 || xhr.status >= 300) {
-                            reject('HTTP Error: ' + xhr.status);
-                            return;
-                        }
-
-                        let json = JSON.parse(xhr.responseText);
-
-                        if (!json || typeof json.location !== 'string') {
-                            reject('Invalid JSON: ' + xhr.responseText);
-                            return;
-                        }
-
-                        resolve(json.location);
-                    };
-
-                    xhr.onerror = function () {
-                        reject('Image upload failed');
-                    };
-
-                    let formData = new FormData();
-                    formData.append('file', blobInfo.blob(), blobInfo.filename());
-
-                    xhr.send(formData);
-                });
+        // Ждем, пока всё загрузится, и вызываем функцию, которую мы прокинули в window
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof window.initTinyMCE === 'function') {
+                window.initTinyMCE(
+                    "{{ route('tinymce.upload') }}",
+                    "{{ csrf_token() }}"
+                );
             }
         });
-
-
-        // document.querySelector('form').addEventListener('submit', () => tinymce.triggerSave());
     </script>
 @endsection

@@ -1,62 +1,50 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">Регистрация</div>
-                <div class="card-body">
-                    <form method="POST" action="{{ route('registered') }}">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Имя</label>
-                            <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+    <div class="auth-page-container">
+        <div class="auth-card">
+            <div class="auth-header-block">
+                <h2 class="brand-name">NewsHub</h2>
+                <h1 class="form-title">Создать аккаунт</h1>
+                <p class="form-subtitle">Введите ваши данные</p>
+            </div>
 
-                            @error('name')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
+            <form method="POST" action="{{ route('registered') }}" class="auth-form">
+                @csrf
 
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email адрес</label>
-                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+                <div class="input-group-custom">
+                    <input id="name" type="text" class="google-input @error('name') is-invalid @enderror"
+                           name="name" value="{{ old('name') }}" required placeholder="Ваше имя" autofocus>
+                    @error('name') <span class="error-msg">{{ $message }}</span> @enderror
+                </div>
 
-                            @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
+                <div class="input-group-custom">
+                    <input id="email" type="email" class="google-input @error('email') is-invalid @enderror"
+                           name="email" value="{{ old('email') }}" required placeholder="Email адрес">
+                    @error('email') <span class="error-msg">{{ $message }}</span> @enderror
+                </div>
 
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Пароль</label>
-                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                            @error('password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="password-confirm" class="form-label">Подтверждение пароля</label>
-                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                        </div>
-
-                        <div class="mb-0">
-                            <button type="submit" class="btn btn-primary">
-                                Зарегистрироваться
-                            </button>
-                        </div>
-                    </form>
-                    <div class="auth-footer">
-                        <p>Уже есть аккаунт? <a href="{{ route('login') }}">Войти</a></p>
+                <div class="password-row">
+                    <div class="password-col">
+                        <input id="password" type="password" class="google-input @error('password') is-invalid @enderror"
+                               name="password" required placeholder="Пароль">
+                    </div>
+                    <div class="password-col">
+                        <input id="password-confirm" type="password" class="google-input"
+                               name="password_confirmation" required placeholder="Повтор">
                     </div>
                 </div>
-            </div>
+                @error('password') <span class="error-msg mb-3">{{ $message }}</span> @enderror
+
+                <p class="hint-text">Используйте 6 или более символов.</p>
+
+                <div class="form-actions">
+                    <a href="{{ route('login') }}" class="link-secondary-google">Войти вместо этого</a>
+                    <button type="submit" class="btn-google-blue">
+                        Далее
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 @endsection
